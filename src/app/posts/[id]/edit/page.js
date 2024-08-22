@@ -1,48 +1,61 @@
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Edit Post",
+};
+
 export default async function EditPost({ params }) {
-  const post = await fetchPost(params.id);
+  const postId = params.id;
+  const result = await db.query(`SELECT * FROM posts WHERE id = $1`, [postId]);
+  const post = result.rows[0];
 
-  async function fetchPost(id) {
-    const { data } = await db.query(`SELECT * FROM posts`);
+  const catresult = await db.query(`SELECT * FROM categories`);
+  const cats = catresult.rows;
 
-    supabase.from("posts").select("*").eq("id", id).single();
-    return data;
-  }
-
-  async function updatePostAction(formData, id) {
+  async function editPostAction(formData) {
+    "use server";
+    const postId = formData.get("postId");
     const postText = formData.get("postText");
     const categoryId = formData.get("categoryId");
 
-    const { error } = await supabase
-      .from("posts")
-      .update({ post: postText, category_id: categoryId })
-      .eq("id", id);
+    if (!postId || !postText || !categoryId) {
+      throw new Error("Missing data");
+    }
 
-    if (error) throw new Error(error.message);
+    await db.query(
+      `
+    UPDATE posts 
+    SET post = $1, category_id = $2 
+    WHERE id = $3
+    `,
+      [postText, categoryId, postId]
+    );
 
-    redirect("/posts");
+    redirect(`/posts/${postId}`);
   }
 
   return (
-    <form
-      action={(formData) => updatePostAction(formData, params.id)}
-      method="POST"
-      className="p-4"
-    >
+    <form action={editPostAction} className="p-4">
       <textarea
         name="postText"
-        defaultValue={post.post}
+        placeholder="Edit your post"
         className="w-full p-2 border h-36"
+        defaultValue={post.post}
         required
       />
-      <select name="categoryId" className="mt-2" required>
-        <option value={post.category_id}>
-          Current Category - {post.category_id}
-        </option>
-        <option value="1">Category 1</option>
-        <option value="2">Category 2</option>
+      <input type="hidden" name="postId" value={postId} />
+      <select
+        name="categoryId"
+        defaultValue={post.category_id}
+        className="mt-2"
+      >
+        <option value="">Select Category</option>
+        {cats.map((cat) => (
+          <option key={cat.id} value={cat.id}>
+            {cat.name}
+          </option>
+        ))}
       </select>
       <button type="submit" className="px-4 py-2 mt-4 text-white bg-blue-500">
         Update Post
