@@ -1,6 +1,11 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 
+export const metadata = {
+  title: "comments",
+  discription: "view all comments for this post",
+};
+
 export default async function PostDetail({ params }) {
   const post = await fetchPost(params.id);
   const comments = await fetchComments(params.id);
@@ -26,6 +31,7 @@ export default async function PostDetail({ params }) {
     );
 
     return result.rows[0];
+    console.log(result.rows);
   }
 
   async function fetchComments(postId) {
@@ -37,17 +43,21 @@ export default async function PostDetail({ params }) {
   `,
       [postId]
     );
-
     return result.rows;
   }
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">{post.post}</h1>
-      <p className="text-gray-600">
-        Posted by {post.username} in {post.category}
-      </p>
-
+      <nav>
+        <Link href={`/login/${params.user}/posts`}>Back to Posts</Link>
+      </nav>
+      <div>
+        <h1 className="text-2xl font-bold">{post.post}</h1>
+        <p className="text-gray-600">
+          Posted by {post.username} in {post.category}
+        </p>
+        <Link href={`/login/${params.user}/posts/${params.id}/edit`}>Edit</Link>
+      </div>
       <h2 className="mt-4 text-xl font-bold">Comments</h2>
       <ul>
         {comments.map((comment) => (
@@ -55,12 +65,19 @@ export default async function PostDetail({ params }) {
             {comment.comment}{" "}
             <span className="text-gray-500">
               ({new Date(comment.timestamp).toLocaleString()})
+              <nav>
+                <Link
+                  href={`/login/${params.user}/posts/${params.id}/comments/${comment.id}/edit`}
+                >
+                  Edit
+                </Link>
+              </nav>
             </span>
           </li>
         ))}
       </ul>
       <Link
-        href={`/posts/${params.id}/comments/createComment`}
+        href={`/login/${params.user}/posts/${params.id}/comments/createComment`}
         className="inline-block px-4 py-2 mt-4 text-white bg-blue-500"
       >
         Add Comment

@@ -3,9 +3,10 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Posts",
+  discription: "view all posts",
 };
 
-export default async function Posts({ searchParams }) {
+export default async function Posts({ params, searchParams }) {
   const sort = searchParams.sort === "desc" ? "DESC" : "ASC";
 
   const result = await db.query(`
@@ -30,10 +31,18 @@ export default async function Posts({ searchParams }) {
   return (
     <div className="h-screen w-screen bg-[#f8f2bf] flex flex-col items-center mt-20">
       <div className="mb-4 sort">
-        <Link href="/posts?sort=asc" className="mr-4">
+        <Link href={`/login/${params.user}/posts?sort=asc`} className="mr-4">
           Sort ascending
         </Link>
-        <Link href="/posts?sort=desc">Sort descending</Link>
+        <Link href={`/login/${params.user}/posts?sort=desc`}>
+          Sort descending
+        </Link>
+        <Link
+          href={`/login/${params.user}/posts/createPost`}
+          className="inline-block px-4 py-2 mt-4 text-white bg-blue-500"
+        >
+          Create Post
+        </Link>
       </div>
       {posts.map((post) => {
         const jsonDate = new Date(post.timestamp);
@@ -49,19 +58,15 @@ export default async function Posts({ searchParams }) {
             <p className="text-gray-600">
               Category: {post.category} (Color: {post.category_colour})
             </p>
-            <Link href={`/posts/${post.id}`} className="text-blue-500">
+            <Link
+              href={`/login/${params.user}/posts/${post.id}`}
+              className="text-blue-500"
+            >
               View Comments
             </Link>
           </div>
         );
       })}
-
-      <Link
-        href="/posts/createPost"
-        className="inline-block px-4 py-2 mt-4 text-white bg-blue-500"
-      >
-        Create Post
-      </Link>
     </div>
   );
 }
