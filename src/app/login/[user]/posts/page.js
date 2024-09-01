@@ -29,17 +29,23 @@ export default async function Posts({ params, searchParams }) {
   const posts = result.rows;
 
   return (
-    <div className="h-screen w-screen bg-[#f8f2bf] flex flex-col items-center mt-20">
-      <div className="mb-4 sort">
-        <Link href={`/login/${params.user}/posts?sort=asc`} className="mr-4">
+    <div className="h-screen w-screen bg-[#f8f2bf] flex flex-col items-center ">
+      <div className="flex justify-between w-11/12 mb-4 sort">
+        <Link
+          href={`/login/${params.user}/posts?sort=asc`}
+          className="mr-4 hover:text-[#dd15cc] hover:cursor:pointer"
+        >
           Sort ascending
         </Link>
-        <Link href={`/login/${params.user}/posts?sort=desc`}>
+        <Link
+          href={`/login/${params.user}/posts?sort=desc`}
+          className="ml-4 hover:text-[#dd15cc] hover:cursor:pointer"
+        >
           Sort descending
         </Link>
         <Link
           href={`/login/${params.user}/posts/createPost`}
-          className="inline-block px-4 py-2 mt-4 text-white bg-blue-500"
+          className="border-double border-[#cd950c] border-8 outline-8 h-fit w-fit p-4 bg-[#002349] text-[#cd950c] text-2xl"
         >
           Create Post
         </Link>
@@ -51,16 +57,19 @@ export default async function Posts({ params, searchParams }) {
 
         return (
           <div key={post.id} className="w-3/4 pb-4 border-b">
-            <h2 className="text-lg font-bold">{post.post}</h2>
+            <h2
+              className="text-lg font-bold"
+              style={{ backgroundColor: `${post.category_colour}` }}
+            >
+              {post.post}
+            </h2>
             <p className="text-gray-600">
               Posted by {post.username} on {formattedDate} at {formattedTime}
             </p>
-            <p className="text-gray-600">
-              Category: {post.category} (Color: {post.category_colour})
-            </p>
+            <p className="text-gray-600">Category: {post.category}</p>
             <Link
               href={`/login/${params.user}/posts/${post.id}`}
-              className="text-blue-500"
+              className="mr-4 hover:text-[#dd15cc] hover:cursor:pointer"
             >
               View Comments
             </Link>

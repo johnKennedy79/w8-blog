@@ -11,9 +11,8 @@ export default async function AddComment({ params }) {
   const userResult = await db.query(`SELECT * FROM users WHERE name = $1`, [
     params.user,
   ]);
-  console.log(params.user);
+
   const userId = userResult.rows;
-  console.log(userId[0].id);
 
   async function addCommentAction(formData) {
     "use server";
@@ -34,9 +33,14 @@ export default async function AddComment({ params }) {
   }
 
   return (
-    <div>
+    <div className="h-screen w-screen bg-[#f8f2bf] flex flex-col items-center ">
       <nav>
-        <Link href={`/login/${params.user}/posts/${params.id}`}></Link>
+        <Link
+          href={`/login/${params.user}/posts/${params.id}`}
+          className="text-gray-600  mt-4 hover:text-[#dd15cc] hover:cursor:pointer"
+        >
+          Back to Post comments
+        </Link>
       </nav>
       <form action={addCommentAction} className="p-4">
         <textarea
@@ -48,7 +52,7 @@ export default async function AddComment({ params }) {
         <input type="hidden" name="postId" value={params.id} />
         <input type="hidden" name="userId" value={userId[0].id} />
         <input type="hidden" name="timestanmp" value="now()" />
-        <button className="px-4 py-2 mt-4 text-white bg-blue-500">
+        <button className=" ml-8 border-double border-[#cd950c] border-8 outline-8 h-fit w-fit p-4 bg-[#002349] text-[#cd950c] text-2xl">
           Add Comment
         </button>
       </form>

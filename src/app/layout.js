@@ -13,8 +13,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="p-4 bg-white shadow">
-          <h1 className="text-2xl font-bold">Instaface</h1>
+        <header className="p-4 bg-[#002349] text-center ">
+          <h1 className="text-2xl font-bold text-[#cd950c]">Instaface</h1>
         </header>
         <main>{children}</main>
       </body>

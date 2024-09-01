@@ -13,7 +13,8 @@ export default async function EditComment({ params }) {
     userName,
   ]);
   const userId = userResult.rows[0].id;
-  const { commentId, postId } = params;
+  const postId = params.id;
+  const commentId = params.commentId;
   const result = await db.query(
     `
     SELECT * FROM comments WHERE id = $1
@@ -30,7 +31,7 @@ export default async function EditComment({ params }) {
     const timestamp = formData.get("timestamp");
     const userId = formData.get("userId");
     const postId = formData.get("postId");
-
+    console.log(formData);
     await db.query(
       `UPDATE comments 
       SET comment = $1, timestamp = $2, user_id = $3, post_id = $4

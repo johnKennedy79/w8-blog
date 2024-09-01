@@ -36,9 +36,14 @@ export default async function CreatePost({ params }) {
   }
 
   return (
-    <div>
+    <div className="h-screen w-screen bg-[#f8f2bf] flex flex-col items-center ">
       <nav>
-        <Link href={`/login/${params.user}/posts`}>Back to Posts</Link>
+        <Link
+          href={`/login/${params.user}/posts`}
+          className=" mt-4 hover:text-[#dd15cc] hover:cursor:pointer"
+        >
+          Back to Posts
+        </Link>
       </nav>
       <form action={createPostAction} className="p-4">
         <textarea
@@ -51,13 +56,18 @@ export default async function CreatePost({ params }) {
         <select name="categoryId" className="mt-2" required>
           <option value="">Select Category</option>
           {cats.map((cat) => (
-            <option key={cat.id} value={cat.id} name="categoryId">
+            <option
+              key={cat.id}
+              value={cat.id}
+              name="categoryId"
+              style={{ backgroundColor: `${cat.colour}` }}
+            >
               {cat.name}
             </option>
           ))}
         </select>
         <input type="hidden" name="userId" value={userId[0].id} />
-        <button className="px-4 py-2 mt-4 text-white bg-blue-500">
+        <button className=" ml-8 border-double border-[#cd950c] border-8 outline-8 h-fit w-fit p-4 bg-[#002349] text-[#cd950c] text-2xl">
           Create Post
         </button>
       </form>

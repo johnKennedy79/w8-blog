@@ -9,7 +9,6 @@ export const metadata = {
 export default function Login() {
   async function handleLogin(formData) {
     "use server";
-    console.log("loging in");
 
     const name = formData.get("name");
     const password = formData.get("password");
@@ -19,8 +18,7 @@ export default function Login() {
     ]);
     const user = result.rows[0].name;
     const checkPassword = result.rows[0].password;
-    console.log(user);
-    console.log(checkPassword);
+
     if (user && checkPassword === password) {
       redirect(`/login/${user}/posts`);
     } else {
@@ -37,7 +35,7 @@ export default function Login() {
           User Name
         </label>
         <input
-          className="text-[#8b6508] text-2xl border-solid border-[#cd950c] border-2 w-56 bg-[#e8e5c3]"
+          className="text-[#8b6508] text-1xl border-solid border-[#cd950c] border-2 w-56 bg-[#e8e5c3]"
           name="name"
           placeholder="Add a user name here.."
           required
@@ -47,13 +45,14 @@ export default function Login() {
           lowercase letter, and at between 8 & 15 characters.
         </label>
         <input
-          className="text-[#8b6508] text-2xl border-solid border-[#cd950c] border-2 w-56 bg-[#e8e5c3]"
+          type="password"
+          className="text-[#8b6508] text-1xl border-solid border-[#cd950c] border-2 w-56 bg-[#e8e5c3]"
           name="password"
-          placeholder="Create a password..."
+          placeholder="Enter your password..."
           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}"
           required
         ></input>
-        <button className="border-double border-[#cd950c] border-8 outline-8 h-20 w-32 bg-[#002349] text-[#cd950c] text-2xl">
+        <button className="border-double border-[#cd950c] border-8 outline-8 h-fit w-fit p-4 bg-[#002349] text-[#cd950c] text-2xl">
           Login
         </button>
       </form>
